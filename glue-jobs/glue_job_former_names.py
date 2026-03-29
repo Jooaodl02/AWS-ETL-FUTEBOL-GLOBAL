@@ -22,6 +22,7 @@ def read_source(spark, source_path: str) -> DataFrame:
         .csv(source_path)
     )
 
+
 def transform_former_names(df: DataFrame, input_format: str, output_format: str) -> DataFrame:
     return (
         df
@@ -29,6 +30,10 @@ def transform_former_names(df: DataFrame, input_format: str, output_format: str)
         .withColumn("end_date", to_date(col("end_date"), input_format))
         .withColumn("start_date", date_format(col("start_date"), output_format))
         .withColumn("end_date", date_format(col("end_date"), output_format))
+        .withColumnRenamed("current", "nome_atual")
+        .withColumnRenamed("former", "nome_original")
+        .withColumnRenamed("start_date", "anomesdia_inicio_nome_original")
+        .withColumnRenamed("end_date", "anomesdia_final_nome_original")
     )
 
 
