@@ -22,7 +22,6 @@ def read_source(spark, source_path: str) -> DataFrame:
         .csv(source_path)
     )
 
-
 def transform_former_names(df: DataFrame, input_format: str, output_format: str) -> DataFrame:
     return (
         df
@@ -37,28 +36,21 @@ def write_target(df: DataFrame, target_path: str, mode: str = "overwrite") -> No
     df.write.mode(mode).parquet(target_path)
 
 
-def run_job(
-    source_path: str = SOURCE_S3_PATH,
-    target_path: str = TARGET_S3_PATH,
-    input_format: str = INPUT_DATE_FORMAT,
-    output_format: str = OUTPUT_DATE_FORMAT,
-    write_mode: str = WRITE_MODE,
-    job_name: str = JOB_NAME,
-) -> None:
+def main() -> None:
     sc = SparkContext()
     glue_context = GlueContext(sc)
     spark = glue_context.spark_session
 
     job = Job(glue_context)
-    job.init(job_name, {"JOB_NAME": job_name})
+    job.init(JOB_NAME, {"JOB_NAME": JOB_NAME})
 
-    raw_df = read_source(spark, source_path)
+    raw_df = read_source(spark, SOURCE_S3_PATH)
     transformed_df = transform_former_names(
-        raw_df, input_format, output_format)
-    write_target(transformed_df, target_path, write_mode)
+        raw_df, INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT)
+    write_target(transformed_df, TARGET_S3_PATH, WRITE_MODE)
 
     job.commit()
 
 
 if __name__ == "__main__":
-    run_job()
+    main()
