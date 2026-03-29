@@ -25,9 +25,9 @@ def read_source(spark, source_path: str) -> DataFrame:
 def transform_former_names(df: DataFrame, input_format: str, output_format: str) -> DataFrame:
     return (
         df
-        .withColumn("star_date", to_date(col("star_date"), input_format))
+        .withColumn("start_date", to_date(col("start_date"), input_format))
         .withColumn("end_date", to_date(col("end_date"), input_format))
-        .withColumn("star_date", date_format(col("star_date"), output_format))
+        .withColumn("start_date", date_format(col("start_date"), output_format))
         .withColumn("end_date", date_format(col("end_date"), output_format))
     )
 
