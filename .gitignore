@@ -1,3 +1,4 @@
 # Ignore local secrets
 KEYS.txt
 aws.txt
+ref_db.txt
